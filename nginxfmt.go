@@ -16,12 +16,13 @@ func main() {
 	override := flag.Bool("i", false, "override origin file")
 	file := flag.String("f", "", "format nginx conf file path")
 	dir := flag.String("d", "", "nginx conf dir")
+	ext := flag.String("e", ".conf", "nginx conf extension")
 
 	flag.Parse()
 
 	if *dir != "" {
 		filepath.Walk(*dir, func(path string, info os.FileInfo, e error) error {
-			if strings.HasSuffix(path, ".conf") {
+			if strings.HasSuffix(path, *ext) {
 				fmtFile(path, *override)
 			}
 			return nil
@@ -31,7 +32,6 @@ func main() {
 	} else {
 		flag.Usage()
 	}
-
 }
 
 func fmtFile(file string, override bool) {

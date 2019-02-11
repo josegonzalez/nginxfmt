@@ -11,6 +11,8 @@ go get -u https://github.com/litgh/nginxfmt
 Usage of ./nginxfmt:
   -d string
     	nginx conf dir
+  -e string
+      nginx conf extension (default ".conf")
   -f string
     	format nginx conf file path
   -i	override origin file
