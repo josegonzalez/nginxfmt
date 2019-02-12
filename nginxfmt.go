@@ -20,18 +20,19 @@ func main() {
 	file := flag.String("f", "", "format nginx conf file path")
 	dir := flag.String("d", "", "nginx conf dir")
 	ext := flag.String("e", ".conf", "nginx conf extension")
+	minify := flag.Bool("m", false, "minify program to reduce its size")
 
 	flag.Parse()
 
 	if *dir != "" {
 		filepath.Walk(*dir, func(path string, info os.FileInfo, e error) error {
 			if strings.HasSuffix(path, *ext) {
-				fmtFile(path, *override)
+				fmtFile(path, *override, *minify)
 			}
 			return nil
 		})
 	} else if *file != "" {
-		fmtFile(*file, *override)
+		fmtFile(*file, *override, *minify)
 	} else {
 		flag.Usage()
 	}
@@ -121,7 +122,7 @@ func times(str string, n int) string {
 	return strings.Repeat(str, n)
 }
 
-func fmtFile(file string, override bool) {
+func fmtFile(file string, override bool, minify bool) {
 	f, err := os.Open(file)
 	if err != nil {
 		fmt.Println(err)
@@ -144,6 +145,10 @@ func fmtFile(file string, override bool) {
 		l = strings.TrimSpace(l)
 
 		currType := getType(l)
+
+		if minify && (currType == "comment" || currType == "newline") {
+			continue
+		}
 
 		if currType != "directive" {
 			maxLength = flushDirectives(&buf, directives, indent, maxLength)

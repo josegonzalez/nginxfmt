@@ -16,4 +16,5 @@ Usage of ./nginxfmt:
   -f string
     	format nginx conf file path
   -i	override origin file
+  -m  minify program to reduce its size
 ```
